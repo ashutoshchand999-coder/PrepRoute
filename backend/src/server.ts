@@ -32,8 +32,6 @@ interface DB {
 
 const dbPath = join(process.cwd(), "src", "db.json");
 
-console.log("Database Path:", dbPath);
-
 let db: DB;
 try {
   db = JSON.parse(readFileSync(dbPath, "utf-8"));
@@ -267,7 +265,7 @@ const server = createServer(async (request, response) => {
   json(response, 404, { success: false, message: "Route not found" });
 });
 
-server.listen(port, "127.0.0.1", () => {
-  console.log(`PrepRoute backend listening at http://127.0.0.1:${port}`);
+server.listen(port, "0.0.0.0", () => {
+  console.log(`PrepRoute backend listening at http://0.0.0.0:${port}`);
 });
 
