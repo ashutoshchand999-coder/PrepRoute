@@ -65,6 +65,15 @@ const server = createServer(async (request, response) => {
   const requestUrl = new URL(request.url ?? "/", `http://${request.headers.host ?? "127.0.0.1"}`);
   const path = requestUrl.pathname;
 
+  if (path === "/" || path === "/api") {
+    json(response, 200, { 
+      success: true, 
+      message: "PrepRoute API is running successfully!", 
+      health: "/api/health" 
+    });
+    return;
+  }
+
   if (path === "/api/health") {
     json(response, 200, { success: true, service: "preproute-backend" });
     return;
@@ -265,7 +274,7 @@ const server = createServer(async (request, response) => {
   json(response, 404, { success: false, message: "Route not found" });
 });
 
-server.listen(port, "0.0.0.0", () => {
-  console.log(`PrepRoute backend listening at http://0.0.0.0:${port}`);
+server.listen(port, "127.0.0.1", () => {
+  console.log(`PrepRoute backend listening at http://127.0.0.1:${port}`);
 });
 
