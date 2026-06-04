@@ -32,6 +32,8 @@ interface DB {
 
 const dbPath = join(process.cwd(), "src", "db.json");
 
+console.log("Database Path:", dbPath);
+
 let db: DB;
 try {
   db = JSON.parse(readFileSync(dbPath, "utf-8"));
