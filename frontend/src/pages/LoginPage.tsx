@@ -1,10 +1,15 @@
-import { FormEvent, useState } from "react";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
-import { getErrorMessage } from "../services/api";
+import { loginSchema, LoginFormValues } from "../utils/validators";
 import { useLogin } from "../hooks/useAuth";
+import { getErrorMessage } from "../api";
 import { Logo } from "../components/layout/Logo";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import { FormField } from "../components/ui/FormField";
+import { Toast } from "../components/ui/Toast";
 
 const LoginIllustration = () => (
   <div className="relative h-[460px] w-[520px] max-w-full">
@@ -38,22 +43,27 @@ const LoginIllustration = () => (
 export const LoginPage = () => {
   const navigate = useNavigate();
   const loginMutation = useLogin();
-  const [userId, setUserId] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
 
-  const submit = async (event: FormEvent) => {
-    event.preventDefault();
-    setError("");
-    if (!userId.trim() || !password.trim()) {
-      setError("User ID and password are required.");
-      return;
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      userId: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
     try {
-      await loginMutation.mutateAsync({ userId, password });
+      await loginMutation.mutateAsync(data);
       navigate("/dashboard");
     } catch (err) {
-      setError(getErrorMessage(err));
+      setToastMessage(getErrorMessage(err));
+      window.setTimeout(() => setToastMessage(""), 3000);
     }
   };
 
@@ -63,31 +73,40 @@ export const LoginPage = () => {
         <LoginIllustration />
       </section>
       <section className="flex items-center justify-center border-l-4 border-slate-500 bg-white p-6">
-        <form onSubmit={submit} className="flex min-h-[calc(100vh-48px)] w-full max-w-[720px] flex-col justify-center rounded-md border border-primary-300 px-6 py-10 md:px-[14%]">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          aria-label="Login Form"
+          className="flex min-h-[calc(100vh-48px)] w-full max-w-[720px] flex-col justify-center rounded-md border border-primary-300 px-6 py-10 md:px-[14%] bg-white animate-fade-in"
+        >
           <div className="mb-12">
             <Logo />
           </div>
           <h1 className="mb-7 text-xl font-bold text-slate-700">Login</h1>
           <p className="mb-9 text-sm text-slate-600">Use your company provided Login credentials</p>
           <div className="space-y-6">
-            <Input label="User ID" placeholder="Enter User ID" value={userId} onChange={(event) => setUserId(event.target.value)} />
-            <Input
-              label="Password"
-              placeholder="Enter Password"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-            />
+            <FormField label="User ID" error={errors.userId?.message} required>
+              <Input
+                placeholder="Enter User ID"
+                {...register("userId")}
+              />
+            </FormField>
+            <FormField label="Password" error={errors.password?.message} required>
+              <Input
+                placeholder="Enter Password"
+                type="password"
+                {...register("password")}
+              />
+            </FormField>
           </div>
-          <button type="button" className="mt-6 self-start text-sm font-medium text-primary-600">
+          <button type="button" className="mt-6 self-start text-sm font-semibold text-primary-500 hover:text-primary-600 transition">
             Forgot password?
           </button>
-          {error ? <p className="mt-4 rounded-md bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600">{error}</p> : null}
-          <Button className="mt-8 w-full" disabled={loginMutation.isPending}>
+          <Button className="mt-8 w-full" type="submit" disabled={loginMutation.isPending}>
             {loginMutation.isPending ? "Logging in..." : "Login"}
           </Button>
         </form>
       </section>
+      {toastMessage && <Toast tone="error">{toastMessage}</Toast>}
     </main>
   );
 };

@@ -5,6 +5,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { CreateEditTestPage } from "./pages/CreateEditTestPage";
 import { AddQuestionsPage } from "./pages/AddQuestionsPage";
 import { PreviewPublishPage } from "./pages/PreviewPublishPage";
+import { QuestionsPage } from "./pages/QuestionsPage";
 
 export const App = () => (
   <Routes>
@@ -15,6 +16,7 @@ export const App = () => (
       <Route path="/tests/:id/edit" element={<CreateEditTestPage />} />
       <Route path="/tests/:id/questions" element={<AddQuestionsPage />} />
       <Route path="/tests/:id/preview" element={<PreviewPublishPage />} />
+      <Route path="/questions" element={<QuestionsPage />} />
     </Route>
     <Route path="*" element={<Navigate to="/login" replace />} />
   </Routes>

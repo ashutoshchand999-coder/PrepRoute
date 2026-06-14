@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllTests, getSubjects, getSubTopicsByTopics, getTestById, getTopicsBySubject } from "../services/api";
+import { getAllTests, getSubjects, getSubTopicsByTopics, getTestById, getTopicsBySubject, getAllTopics, getAllSubTopics } from "../api";
 
 export const useTests = () =>
   useQuery({
@@ -33,3 +33,16 @@ export const useSubTopics = (topicIds: string[]) =>
     queryFn: () => getSubTopicsByTopics(topicIds),
     enabled: topicIds.length > 0,
   });
+
+export const useAllTopics = () =>
+  useQuery({
+    queryKey: ["topics"],
+    queryFn: getAllTopics,
+  });
+
+export const useAllSubTopics = () =>
+  useQuery({
+    queryKey: ["subTopics"],
+    queryFn: getAllSubTopics,
+  });
+

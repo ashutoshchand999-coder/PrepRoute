@@ -11,7 +11,7 @@ const numericRequired = (label: string) =>
 export const testSchema = z.object({
   name: z.string().min(1, "Test name is required"),
   subject: z.string().min(1, "Subject is required"),
-  type: z.enum(["practice", "mock", "previous_year"]),
+  type: z.enum(["practice", "mock", "previous_year", "chapterwise", "subjectwise", "fulltest"]),
   topics: z.array(z.string()).min(1, "Select at least one topic"),
   sub_topics: z.array(z.string()).default([]),
   difficulty: z.enum(["easy", "medium", "hard"]),
@@ -35,6 +35,7 @@ export const questionSchema = z.object({
   topic_id: z.string().optional(),
   sub_topic_id: z.string().optional(),
   media_url: z.string().url("Enter a valid URL").or(z.literal("")).optional(),
+  image_url: z.string().url("Enter a valid URL").or(z.literal("")).optional(),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;

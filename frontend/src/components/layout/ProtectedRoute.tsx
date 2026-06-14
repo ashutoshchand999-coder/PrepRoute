@@ -1,8 +1,8 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { useAuthStore } from "../../store/authStore";
+import { useAuth } from "../../context/AuthContext";
 
 export const ProtectedRoute = () => {
-  const token = useAuthStore((state) => state.token);
+  const { token } = useAuth();
   const location = useLocation();
 
   if (!token) {
@@ -11,3 +11,4 @@ export const ProtectedRoute = () => {
 
   return <Outlet />;
 };
+

@@ -36,7 +36,7 @@ export interface SubTopic {
 
 export type TestStatus = "draft" | "live" | null;
 export type TestDifficulty = "easy" | "medium" | "hard";
-export type TestType = "practice" | "mock" | "previous_year";
+export type TestType = "practice" | "mock" | "previous_year" | "chapterwise" | "subjectwise" | "fulltest";
 export type CorrectOption = "option1" | "option2" | "option3" | "option4";
 
 export interface Test {
@@ -74,6 +74,16 @@ export interface Question {
   topic_id?: string;
   sub_topic_id?: string;
   media_url?: string;
+  created_by?: string;
+  created_at?: string;
+  updated_at?: string;
+  updated_by?: string;
+  status?: "active" | "draft";
+  source?: string;
+  image_url?: string;
+  subject?: string;
+  topic?: string;
+  subtopic?: string;
 }
 
 export interface TestPayload {
