@@ -123,7 +123,7 @@ const server = createServer(async (request, response) => {
   const requestUrl = new URL(request.url ?? "/", `http://${request.headers.host ?? "127.0.0.1"}`);
   const path = requestUrl.pathname;
 
-  if (path === "/" || path === "/api") {
+  if (path === "/api") {
     json(response, 200, {
       success: true,
       message: "PrepRoute API is running successfully!",
